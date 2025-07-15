@@ -1,0 +1,35 @@
+{
+  "name": "expressnodetemplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JKanaiya/ExpressNodeTemplate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/JKanaiya/ExpressNodeTemplate/issues"
+  },
+  "homepage": "https://github.com/JKanaiya/ExpressNodeTemplate#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.11.1"
+  }
+}
