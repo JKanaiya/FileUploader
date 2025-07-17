@@ -7,3 +7,33 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  password String
+  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId Int
+}
+
+model Folder {
+  id    Int    @id @default(autoincrement())
+  name  String
+  files File[]
+  User  User[]
+}
+
+model File {
+  id       Int     @id @default(autoincrement())
+  name     String
+  url      String
+  Folder   Folder? @relation(fields: [folderId], references: [id])
+  folderId Int?
+}
