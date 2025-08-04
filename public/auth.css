@@ -1,0 +1,118 @@
+/*
+
+  Josh's Custom CSS Reset
+
+  https://www.joshwcomeau.com/css/custom-css-reset/
+
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+a {
+  all: unset;
+  cursor: pointer;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+body {
+  background-color: #373f51;
+  height: 100dvh;
+  display: flex;
+  padding: 3%;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  padding: 5%;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+label {
+  color: #e6e6ea;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+h2,
+h1 {
+  color: #e6e6ea;
+  margin-top: 30px;
+  font-weight: 700;
+  text-align: center;
+}
+
+h2 {
+  font-style: italic;
+}
+
+.button {
+  padding: 1% 3%;
+  border: none;
+  border-radius: 7px;
+  display: flex;
+  background-color: #008dd5;
+  max-width: 25%;
+  max-height: 55%;
+  font-weight: 900;
+  color: #e6e6ea;
+  flex-direction: row;
+  text-align: center;
+  place-content: center;
+  place-items: center;
+  margin-right: 10px;
+}
+
+.errorContainer {
+  background-color: gray;
+  border: solid 2px #e15554;
+  color: #e15554;
+  font-weight: bold;
+  width: 80%;
+  place-self: center;
+  margin: 10px auto;
+  padding: 2%;
+}

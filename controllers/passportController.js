@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
-import prisma from "./prismaController";
+import prisma from "./prismaController.js";
 
 const pSession = passport.session();
 
@@ -19,7 +19,7 @@ passport.use(
     try {
       const user = await prisma.user.findFirst({
         where: {
-          name: req.body.name,
+          fullname: username,
         },
       });
 
@@ -54,7 +54,6 @@ passport.deserializeUser(async (id, done) => {
         id: id,
       },
     });
-
     done(null, user);
   } catch (err) {
     done(err);

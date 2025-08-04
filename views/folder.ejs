@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>
+      Sign Up 
+    </title>
+    <link rel="stylesheet" href="folder.css">
+  </head>
+  <body>
+    <% if (Array.isArray(files) && (files.length >= 1)){%>
+    <% files.forEach((file) => { %>
+    <%- include('file'); %>
+    <%});%>
+    <%}%>
+  </body>
+</html>

@@ -1,25 +1,25 @@
 <html>
-<head>
-<title>
-Sign Up 
-</title>
-<link rel="stylesheet" href="auth.css">
-</head>
-<body>
-<h1>
-Sign Up 
-</h1>
-<%- include("partials/errors.ejs") %>
-<form method="POST" action="/sign-up">
-<label for="name"> Name: </label>
-<input type="text" name="name" placeholder="Jeff?"/>
-<label for="password"> Password: </label>
-<input type="password" name="password" placeholder="supersecretpasword"/>
-<label for="password"> Confirm Password: </label>
-<input type="password" name="passwordConfirm" placeholder="supersecretpasword"/>
-<button class="button">
-Sign Up
-</button>
-</form>
-</body>
+  <head>
+    <title>
+      Sign Up 
+    </title>
+    <link rel="stylesheet" href="auth.css">
+  </head>
+  <body>
+    <h1>
+      Sign Up 
+    </h1>
+    <%- include("partials/errors.ejs") %>
+    <form method="POST" action="/sign-up">
+      <label for="fullname"> Name: </label>
+      <input type="text" name="fullname" placeholder="Jeff?"/>
+      <label for="password"> Password: </label>
+      <input type="password" name="password" placeholder="supersecretpasword"/>
+      <label for="password"> Confirm Password: </label>
+      <input type="password" name="passwordConfirm" placeholder="supersecretpasword"/>
+      <button class="button">
+        Sign Up
+      </button>
+    </form>
+  </body>
 </html>

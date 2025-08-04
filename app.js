@@ -1,9 +1,12 @@
 import path from "node:path";
 import express from "express";
-import path from "node:path";
 import "dotenv/config.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import prisma from "./controllers/prismaController";
+import prisma from "./controllers/prismaController.js";
+import expressSession from "express-session";
+import indexRouter from "./routes/indexRouter.js";
+import { pSession } from "./controllers/passportController.js";
+// import { PrismaClient } from "@prisma/client";
 
 const app = express();
 app.set("view engine", "ejs");
@@ -24,7 +27,19 @@ app.use(
   }),
 );
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(import.meta.dirname, "public")));
+app.set("views", path.join(import.meta.dirname, "views"));
+app.use(pSession);
+
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
+app.use(indexRouter);
+
 const PORT = process.env.HOST || 3000;
 app.listen(PORT, () => {
-  `Express listening on PORT: ${PORT}`;
+  console.log(`Express listening on PORT: ${PORT}`);
 });
