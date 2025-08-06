@@ -1,15 +1,9 @@
-<html>
-  <head>
-    <title>
-      Sign Up 
-    </title>
-    <link rel="stylesheet" href="folder.css">
-  </head>
-  <body>
+<div>
     <% if (Array.isArray(files) && (files.length >= 1)){%>
     <% files.forEach((file) => { %>
-    <%- include('file'); %>
+    <a href="<%=`/details/${file.id}`%>">
+        <%- include('partials/file', {file: file}); %>
+    </a>
     <%});%>
     <%}%>
-  </body>
-</html>
+</div>

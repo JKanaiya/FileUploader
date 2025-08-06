@@ -1,11 +1,13 @@
 import prisma from "./prismaController.js";
-import fs from "fs";
+import fs, { ReadStream } from "fs";
 import bcrypt from "bcryptjs";
 import { body, validationResult } from "express-validator";
+import multer from "multer";
 import path from "path";
 import fs1 from "fs-extra";
 import fsProm from "fs/promises";
 import { log } from "console";
+import supabase from "./supabaseController.js";
 const localDirame = import.meta.dirname;
 
 const validateFolder = [
@@ -39,7 +41,6 @@ const getHome = async function (req, res) {
         userId: res.locals.user.id,
       },
     });
-    console.log(folders);
     res.render("home", {
       folders: folders,
     });
@@ -59,6 +60,7 @@ const getFolder = await function (req, res) {
   });
   res.render("home", {
     folders: folders,
+    edit: 0,
   });
 };
 
@@ -92,16 +94,19 @@ const addFolderToApp = (req, res, next) => {
   });
 };
 
-const folderExists = (req, res, next) => {
-  const selected = req.params.selected;
+const folderExists = async (req, res, next) => {
+  const selectedFolder = await prisma.folder.findFirst({
+    where: {
+      id: Number(req.params.selected),
+    },
+  });
   const pathToFolder = path.join(
     localDirame,
     `../tempFolder`,
     `${res.locals.user.fullname}`,
-    `${selected}`,
+    `${selectedFolder.name}`,
   );
   res.locals.folderPath = pathToFolder;
-  console.log(req.params);
   fs.access(pathToFolder, (err) => {
     if (err) {
       throw new Error("Folder Does not exist");
@@ -112,7 +117,19 @@ const folderExists = (req, res, next) => {
 };
 
 const viewFolder = [
-  folderExists,
+  // folderExists,
+  async (req, res, next) => {
+    const selectedFolder = await prisma.folder.findFirst({
+      where: {
+        id: Number(req.params.selected),
+      },
+      include: {
+        files: true,
+      },
+    });
+    res.locals.selectedFolder = selectedFolder;
+    next();
+  },
   async (req, res) => {
     if (res.locals.user) {
       const folders = await prisma.folder.findMany({
@@ -120,9 +137,11 @@ const viewFolder = [
           userId: res.locals.user.id,
         },
       });
+      console.log(res.locals.selectedFolder);
       res.render("home", {
         folders: folders,
-        folder: req.params.selected,
+        edit: 0,
+        files: res.locals.selectedFolder.files,
       });
     } else {
       res.redirect("/");
@@ -131,34 +150,91 @@ const viewFolder = [
 ];
 
 const updateFolder = [
-  folderExists,
+  // folderExists,
   async (req, res) => {
-    try {
-      await fsProm.rename(pathToFolder, req.body.newFolderName);
-    } catch (err) {
-      console.log(err);
-    }
-  },
-];
-
-const deleteFolder = [
-  folderExists,
-  async (req, res) => {
-    fs1.remove(res.locals.folderPath, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("successful folder deletion");
-      }
-    });
-    await prisma.folder.delete({
+    // try {
+    //   await fsProm.rename(pathToFolder, req.body.folderName);
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    await prisma.folder.update({
       where: {
-        id: Number(req.params.folderId),
+        id: Number(req.params.selected),
+      },
+      data: {
+        name: req.body.folderName,
       },
     });
     res.redirect("/");
   },
 ];
+
+const deleteFolder = [
+  // folderExists,
+  async (req, res) => {
+    console.log(req.params.selected);
+    const selectedFolder = await prisma.folder.findFirst({
+      where: {
+        id: Number(req.params.selected),
+      },
+      include: {
+        files: true,
+      },
+    });
+
+    const pathToFolder = path.join(
+      `${res.locals.user.fullname}`,
+      `${selectedFolder.name}`,
+    );
+    res.locals.folderPath = pathToFolder;
+    try {
+      await supabase.storage.from("files").remove([res.locals.folderPath]);
+    } catch (err) {
+      console.log(err);
+    }
+    // fs1.remove(res.locals.folderPath, (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log("successful folder deletion");
+    //   }
+    // });
+    await prisma.file.deleteMany({
+      where: {
+        folderId: Number(req.params.selected),
+      },
+    });
+    await prisma.folder.delete({
+      where: {
+        id: Number(req.params.selected),
+      },
+    });
+    res.redirect("/");
+  },
+];
+
+const viewFileDetails = async (req, res) => {
+  const file = await prisma.file.findFirst({
+    where: {
+      id: Number(req.params.fileId),
+    },
+  });
+  const folders = await prisma.folder.findMany({
+    where: {
+      userId: res.locals.user.id,
+    },
+  });
+  const selectedFolder = await prisma.folder.findFirst({
+    where: {
+      id: file.folderId,
+    },
+  });
+  res.locals.details = file;
+  res.locals.selectedFolder = selectedFolder;
+  res.render("home", {
+    folders: folders,
+  });
+};
 
 const addUserFolder = function (req, res, next) {
   const pathToUser = path.join(
@@ -182,7 +258,7 @@ const addUserFolder = function (req, res, next) {
 
 const createFolder = [
   validateFolder,
-  addFolderToApp,
+  // addFolderToApp,
   async (req, res) => {
     await prisma.folder.create({
       data: {
@@ -196,7 +272,7 @@ const createFolder = [
 
 const createUser = [
   validateUser,
-  addUserFolder,
+  // addUserFolder,
   async (req, res, next) => {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -219,6 +295,23 @@ const createUser = [
   },
 ];
 
+const downloadFile = async (req, res) => {
+  const filePath = path.join(
+    `${res.locals.user.fullname}/${req.params.folder}`,
+    `${req.params.selectedFile}`,
+  );
+
+  try {
+    const { data } = supabase.storage.from("files").getPublicUrl(filePath, {
+      download: true,
+    });
+    console.log(data);
+    res.redirect(data.publicUrl);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export {
   getHome,
   getSignUp,
@@ -227,4 +320,7 @@ export {
   createFolder,
   deleteFolder,
   viewFolder,
+  updateFolder,
+  viewFileDetails,
+  downloadFile,
 };

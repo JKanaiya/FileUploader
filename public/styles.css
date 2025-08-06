@@ -58,6 +58,16 @@ h6 {
 
 body {
   height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+#home {
+  display: flex;
+  height: 90%;
+  width: 100%;
+  place-self: center;
+  background-color: gray;
 }
 
 .button {
@@ -97,4 +107,14 @@ h1 {
   position: absolute;
   right: 30px;
   background-color: #a4778b;
+}
+
+#sidebar {
+  background-color: red;
+  padding: 2%;
+}
+
+#folderContainer {
+  background-color: blue;
+  width: 80%;
 }

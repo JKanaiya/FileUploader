@@ -1,0 +1,6 @@
+<div class="file">
+  <h4><%= file.name %></h4>
+  <h4><%= (file.size / 1000) %> Kb </h4>
+  <h4><%= file.uploadTime %></h4>
+  <a href="<%=`/download/${locals.selectedFolder.name}/${file.name}`%>">Download</a>
+</div>

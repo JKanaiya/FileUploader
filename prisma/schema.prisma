@@ -26,14 +26,16 @@ model Folder {
   id     Int    @id @default(autoincrement())
   name   String
   files  File[]
-  User   User   @relation(fields: [userId], references: [id])
+  User   User?  @relation(fields: [userId], references: [id])
   userId Int
 }
 
 model File {
-  id       Int    @id @default(autoincrement())
-  name     String
-  url      String
-  Folder   Folder @relation(fields: [folderId], references: [id])
-  folderId Int
+  id         Int      @id @default(autoincrement())
+  name       String
+  size       Int
+  uploadTime DateTime
+  url        String
+  Folder     Folder   @relation(fields: [folderId], references: [id])
+  folderId   Int
 }

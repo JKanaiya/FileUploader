@@ -1,34 +1,51 @@
 <html>
   <head>
     <title>File Uploader</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <h1>Home</h1>
-  <% if(!locals.user){%>
-    <%- include ("partials/unauth.ejs")%>
-    <%}else{%>
-    <br/>
-    <% if(folders.length >= 1){ %>
-    <% folders.forEach((folder) => { %>
-    <a href="<%=`/${locals.user.fullname}/${folder.name}`%>">
-    <%- include('partials/folder', {name: folder.name, files: folder.files, folderId: folder.id}); %>
-    </a>
-    <%});%>
-    <%}%>
-    <form method="POST" action="/newFolder">
-      <label for="newFolder"></label>
-      <input type="text" name="newFolder" placeholder="Folder Name">
-      <button type="submit">Add Folder</button>
-    </form>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-      <input type="file" name="uploaded_file"/>
-      <button type="submit">Upload</button>
-    </form>
-    <%}%>
-    <% if(locals.user){%>
-    <a class="button logout" href="/log-out">LOG OUT</a>
-    <%}%>
+      <% if(!locals.user){%>
+      <%- include ("partials/unauth.ejs")%>
+      <%}else{%>
+    <div id="home">
+      <br/>
+      <div id="sidebar">
+        <% if(folders.length >= 1){ %>
+        <% folders.forEach((folder) => { %>
+        <a href="<%=`/${locals.user.fullname}/${folder.id}`%>">
+          <%- include('partials/navFolders', {name: folder.name, folderId: folder.id}); %>
+        </a>
+        <%});%>
+        <%}%>
+        <form method="POST" action="/newFolder">
+          <label for="newFolder"></label>
+          <input type="text" name="newFolder" placeholder="Folder Name">
+          <button type="submit">Add Folder</button>
+        </form>
+      </div>
+      <div id="folderContainer">
+        <% if(locals.selectedFolder && !locals.details) {%>
+        <h5>Edit Folder Name</h5>
+        <form method="POST" action="<%=`/update/${locals.selectedFolder.id}`%>">
+          <input type="text" name="folderName" value="<%=`${locals.selectedFolder.name}`%>"/>
+          <button type="submit">Submit</button>
+        </form>
+        <% if (Array.isArray(files)&& files.length >= 1 ){%>
+        <%- include('folder', {name: locals.selectedFolder.name, files: files}) %>
+        <%}%>
+        <form method="POST" action="<%=`/upload/${locals.selectedFolder.id}`%>" enctype="multipart/form-data">
+          <input type="hidden" id="<%=`${locals.selectedFolder.id}`%>" name="<%=`${locals.selectedFolder.name}`%>"/>
+          <input type="file" name="uploaded_file"/>
+          <button type="submit">Upload</button>
+        </form>
+        <%}%>
+        <% if(locals.details) {%>
+          <%- include('fileDetails', {file: locals.details}); %>
+        <%}%>
+      </div>
+      <a class="button logout" href="/log-out">LOG OUT</a>
+      <%}%>
+    </div>
   </body>
 </html>
-

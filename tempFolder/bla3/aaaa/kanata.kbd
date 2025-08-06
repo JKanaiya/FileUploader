@@ -1,0 +1,19 @@
+(defcfg
+process-unmapped-keys yes
+)
+
+(defsrc
+; caps s a
+)
+
+(defalias
+better(tap-hold 200 200 lctl esc)
+fix(tap-hold 200 200 ; lmet)
+)
+
+(deflayer base
+@better @fix
+)
+
+
+

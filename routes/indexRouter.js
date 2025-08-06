@@ -3,33 +3,33 @@ import {
   createFolder,
   createUser,
   deleteFolder,
+  downloadFile,
   getHome,
   getLogIn,
   getSignUp,
+  updateFolder,
+  viewFileDetails,
   viewFolder,
 } from "../controllers/indexController.js";
 import {
   loginAuthenticate,
   logOut,
 } from "../controllers/passportController.js";
-import multer from "multer";
 
 const indexRouter = express.Router();
-const upload = multer({ dest: "./tempFolder/uploads" });
 
 indexRouter.get("/", getHome);
+indexRouter.get("/details/:fileId", viewFileDetails);
 indexRouter.get("/:name/:selected", viewFolder);
 indexRouter.get("/sign-up", getSignUp);
 indexRouter.get("/log-in", getLogIn);
 indexRouter.get("/folder/:id", getLogIn);
-// indexRouter.get("/:user/:folder", getFolder);
-indexRouter.post("/sign-up", createUser);
-indexRouter.post("/log-in", loginAuthenticate);
 indexRouter.get("/log-out", logOut);
-indexRouter.get("/deleteFolder/:name/:folderId", deleteFolder);
+indexRouter.get("/download/:folder/:selectedFile", downloadFile);
+indexRouter.get("/deleteFolder/:name/:selected", deleteFolder);
+indexRouter.post("/sign-up", createUser);
+indexRouter.post("/update/:selected", updateFolder);
+indexRouter.post("/log-in", loginAuthenticate);
 indexRouter.post("/newFolder", createFolder);
-indexRouter.post("/upload", upload.single("uploaded_file"), (req, res) =>
-  res.redirect("/"),
-);
 
 export default indexRouter;

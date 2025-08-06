@@ -6,8 +6,8 @@ import prisma from "./controllers/prismaController.js";
 import expressSession from "express-session";
 import indexRouter from "./routes/indexRouter.js";
 import { pSession } from "./controllers/passportController.js";
-// import { PrismaClient } from "@prisma/client";
-
+import uploadRouter from "./routes/uploadRouter.js";
+import supabase from "./controllers/supabaseController.js";
 const app = express();
 app.set("view engine", "ejs");
 
@@ -32,12 +32,18 @@ app.use(express.static(path.join(import.meta.dirname, "public")));
 app.set("views", path.join(import.meta.dirname, "views"));
 app.use(pSession);
 
+// Use the JS library to create a bucket.
+const { data, error } = await supabase.storage.createBucket("files", {
+  public: true, // default: false
+});
+
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
 
 app.use(indexRouter);
+app.use(uploadRouter);
 
 const PORT = process.env.HOST || 3000;
 app.listen(PORT, () => {
