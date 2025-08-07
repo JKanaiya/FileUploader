@@ -15,7 +15,7 @@ app.use(
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000, // ms
     },
-    secret: "a santa at nasa",
+    secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
     store: new PrismaSessionStore(prisma, {
