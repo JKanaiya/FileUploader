@@ -157,6 +157,38 @@ const updateFolder = [
     // } catch (err) {
     //   console.log(err);
     // }
+    const files = await prisma.file.findMany({
+      where: {
+        folderId: Number(req.params.selected),
+      },
+    });
+
+    const updatedFileUrls = files.map((file) => {
+      const split = file.url.split("/");
+      console.log(split);
+      return path.join(`${split[0]}`, `${req.body.folderName}`, `${split[2]}`);
+    });
+
+    for (let n = 0; updatedFileUrls.length > n; n++) {
+      const { error } = await supabase.storage
+        .from("files")
+        .move(`${files[n].url}`, updatedFileUrls[n]);
+
+      if (error) {
+        console.log(error);
+      } else {
+        await prisma.file.update({
+          where: {
+            folderId: Number(req.params.selected),
+            id: files[n].id,
+          },
+          data: {
+            url: updatedFileUrls[n],
+          },
+        });
+      }
+    }
+
     await prisma.folder.update({
       where: {
         id: Number(req.params.selected),
