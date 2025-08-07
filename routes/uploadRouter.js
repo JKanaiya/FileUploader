@@ -15,18 +15,20 @@ const handleUpload = async (req, res) => {
   const now = new Date();
   try {
     const filePath = `/${res.locals.user.fullname}/${res.locals.selectedFolder.name}/${req.file.originalname}`;
-    console.log(filePath);
+
     const { data, error } = await supabase.storage
       .from("files")
       .upload(filePath, req.file.buffer, {
         cacheControl: "3600",
         upsert: true,
       });
+
     if (error) {
       console.log(error);
     } else {
       console.log("File Uploaded");
     }
+
     await prisma.file.create({
       data: {
         name: `${req.file.originalname}`,
@@ -35,6 +37,26 @@ const handleUpload = async (req, res) => {
         uploadTime: now.toISOString(),
         size: req.file.size,
       },
+    });
+
+    res.locals.selectedFolder = await prisma.folder.findFirst({
+      where: {
+        id: Number(req.params.folderId),
+      },
+      include: {
+        files: true,
+      },
+    });
+
+    const folders = await prisma.folder.findMany({
+      where: {
+        userId: res.locals.user.id,
+      },
+    });
+
+    res.render("home", {
+      folders: folders,
+      files: res.locals.selectedFolder.files,
     });
   } catch (err) {
     console.log(err);
@@ -45,6 +67,9 @@ const getFolder = async (req, res, next) => {
   const selectedFolder = await prisma.folder.findFirst({
     where: {
       id: Number(req.params.folderId),
+    },
+    include: {
+      files: true,
     },
   });
   res.locals.selectedFolder = selectedFolder;

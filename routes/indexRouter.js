@@ -2,6 +2,7 @@ import express from "express";
 import {
   createFolder,
   createUser,
+  deleteFIle,
   deleteFolder,
   downloadFile,
   getHome,
@@ -25,6 +26,7 @@ indexRouter.get("/sign-up", getSignUp);
 indexRouter.get("/log-in", getLogIn);
 indexRouter.get("/folder/:id", getLogIn);
 indexRouter.get("/log-out", logOut);
+indexRouter.get("/deleteFile/:folder/:selectedFile/:fileId", deleteFIle);
 indexRouter.get("/download/:folder/:selectedFile", downloadFile);
 indexRouter.get("/deleteFolder/:name/:selected", deleteFolder);
 indexRouter.post("/sign-up", createUser);

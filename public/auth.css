@@ -58,7 +58,7 @@ h6 {
 
 body {
   background-color: #373f51;
-  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   padding: 3%;
   flex-direction: column;
@@ -68,7 +68,17 @@ form {
   display: flex;
   padding: 5%;
   flex-direction: column;
+  justify-content: space-evenly;
   row-gap: 20px;
+  background-color: #4c212a;
+  max-width: 70%;
+  min-width: 50%;
+  place-self: center;
+  margin: auto;
+  min-height: 60dvh;
+  max-height: 80dvh;
+  box-shadow: 10px 9px 5px #597081;
+  border-radius: 12px;
 }
 
 label {

@@ -51,6 +51,94 @@ h6 {
   overflow-wrap: break-word;
 }
 
+button:hover,
+button:focus {
+  background: #0053ba;
+}
+
+button:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+button:active {
+  transform: scale(0.99);
+}
+
+:root {
+  --input-border: #8b8a8b;
+  --input-focus-h: 245;
+  --input-focus-s: 100%;
+  --input-focus-l: 42%;
+}
+
+.input {
+  font-size: 16px;
+  // Capitalized to prevent Sass
+  // thinking it's the Sass max()
+  font-size: Max(16px, 1em);
+  font-family: inherit;
+  padding: 0.25em 0.5em;
+  background-color: #fff;
+  border: 2px solid var(--input-border);
+  border-radius: 4px;
+  transition: 180ms box-shadow ease-in-out;
+}
+
+.input:focus {
+  border-color: hsl(
+    var(--input-focus-h),
+    var(--input-focus-s),
+    var(--input-focus-l)
+  );
+  box-shadow: 0 0 0 3px
+    hsla(
+      var(--input-focus-h),
+      var(--input-focus-s),
+      calc(var(--input-focus-l) + 40%),
+      0.8
+    );
+  outline: 3px solid transparent;
+}
+
+.input:not(textarea) {
+  line-height: 1;
+  height: 2.25rem;
+}
+
+input[type="file"] {
+  font-size: 0.9em;
+  padding-top: 0.35rem;
+}
+
+textarea.input {
+  resize: vertical;
+}
+
+.input[readonly] {
+  border-style: dotted;
+  cursor: not-allowed;
+  color: #777;
+}
+
+.input[disabled] {
+  --input-border: #ccc;
+
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.input + label {
+  margin-top: 2rem;
+}
+
+
 #root,
 #__next {
   isolation: isolate;
@@ -60,6 +148,7 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
+  background-color: #597081;
 }
 
 #home {
@@ -67,7 +156,6 @@ body {
   height: 90%;
   width: 100%;
   place-self: center;
-  background-color: gray;
 }
 
 .button {
@@ -96,6 +184,11 @@ body {
   column-gap: 30px;
 }
 
+#folderContainerActions{
+  display: flex;
+  justify-content: space-between;
+}
+
 h1 {
   display: flex;
   padding: 2%;
@@ -103,18 +196,105 @@ h1 {
   color: #e6e6ea;
 }
 
+h2{
+  place-self: center;
+}
+
 .logout {
   position: absolute;
   right: 30px;
+  top: 30px;
   background-color: #a4778b;
 }
 
 #sidebar {
-  background-color: red;
+  color: #d7ebba;
+  /* background-color: #091540; */
+  background-color: #597081;
+  border: solid 5px #eacdc2;
+  border-radius: 10px;
+  margin-right: 5px;
   padding: 2%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
 }
 
 #folderContainer {
-  background-color: blue;
-  width: 80%;
+  padding: 3%;
+  color: #d7ebba;
+  background-color: #774c60;
+  width: 90%;
+  border: solid 5px #eacdc2;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2%;
 }
+
+.folder {
+  display: flex;
+  justify-content: space-between;
+  border: solid #abd2fa 0.2rem;
+  padding: 2% 5%;
+  border-radius: 2px;
+}
+
+.form{
+  display: flex;
+  justify-content: space-between;
+}
+
+#uploadFile{
+  justify-content: space-around;
+  max-width: 70%;
+  flex-direction: column;
+}
+
+.form > input {
+  max-width: 80%;
+}
+
+.file{
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  row-gap: 20px;
+}
+
+#fileDetails{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  max-width: 53%;
+  height: 50dvh;
+}
+
+#fileDetails > div {
+  min-height: 50%;
+  display: flex;
+  padding: 3%;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+#fileDetails > div:nth-child(1){
+  min-width: 90%;
+  align-items: end;
+}
+
+#files{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* background-color: #160f29; */
+  padding: 3%;
+  gap: 20px;
+  color: #f1fffa;
+}
+
+.fileActions{
+  display: flex;
+  min-width: 100px;
+  justify-content: space-around;
+}
+
+

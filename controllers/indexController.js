@@ -137,10 +137,8 @@ const viewFolder = [
           userId: res.locals.user.id,
         },
       });
-      console.log(res.locals.selectedFolder);
       res.render("home", {
         folders: folders,
-        edit: 0,
         files: res.locals.selectedFolder.files,
       });
     } else {
@@ -327,6 +325,27 @@ const createUser = [
   },
 ];
 
+const deleteFIle = async (req, res) => {
+  const filePath = path.join(
+    `${res.locals.user.fullname}/${req.params.folder}`,
+    `${req.params.selectedFile}`,
+  );
+
+  try {
+    const { error } = await supabase.storage.from("files").remove([filePath]);
+
+    await prisma.file.delete({
+      where: {
+        id: Number(req.params.fileId),
+      },
+    });
+
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const downloadFile = async (req, res) => {
   const filePath = path.join(
     `${res.locals.user.fullname}/${req.params.folder}`,
@@ -337,7 +356,6 @@ const downloadFile = async (req, res) => {
     const { data } = supabase.storage.from("files").getPublicUrl(filePath, {
       download: true,
     });
-    console.log(data);
     res.redirect(data.publicUrl);
   } catch (err) {
     console.log(err);
@@ -355,4 +373,5 @@ export {
   updateFolder,
   viewFileDetails,
   downloadFile,
+  deleteFIle,
 };

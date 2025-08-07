@@ -3,17 +3,19 @@
     <title>
       Log In 
     </title>
-    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="/auth.css">
   </head>
   <body>
-    <h1>Log In</h1>
-    <%- include("partials/errors.ejs") %>
-    <form method="POST" action="/log-in" >
-      <label for="username">Name</label>
-      <input id="username" name="username" placeholder="name" type="text" />
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" />
-      <button class="button" type="submit">Log In</button>
-    </form>
+    <div id="formLogin">
+      <%- include("partials/errors.ejs") %>
+      <form method="POST" action="/log-in" >
+      <h1>Log In</h1>
+        <label for="username">Name</label>
+        <input id="username" name="username" placeholder="name" type="text" />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" />
+        <button class="button" type="submit">Log In</button>
+      </form>
+    </div>
     <body>
 </html>
